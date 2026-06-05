@@ -1,0 +1,316 @@
+<Window x:Class="CPU_Y.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="CPU Y Desktop"
+        Height="540" Width="720"
+        MinHeight="480" MinWidth="640"
+        Background="{StaticResource BgDeep}"
+        Foreground="{StaticResource TextPri}"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanResizeWithGrip"
+        FontFamily="Segoe UI">
+
+  <Window.Resources>
+
+    <!-- ── Tab styles ──────────────────────────────────────────────── -->
+    <Style x:Key="TabCtrlStyle" TargetType="TabControl">
+      <Setter Property="Background"           Value="{StaticResource BgDeep}"/>
+      <Setter Property="BorderBrush"          Value="{StaticResource Border}"/>
+      <Setter Property="BorderThickness"      Value="0,0,0,1"/>
+      <Setter Property="Padding"              Value="0"/>
+      <Setter Property="TabStripPlacement"    Value="Top"/>
+    </Style>
+
+    <Style x:Key="TabItemStyle" TargetType="TabItem">
+      <Setter Property="Foreground"       Value="{StaticResource TextSec}"/>
+      <Setter Property="Background"       Value="Transparent"/>
+      <Setter Property="BorderBrush"      Value="Transparent"/>
+      <Setter Property="BorderThickness"  Value="0,0,0,2"/>
+      <Setter Property="Padding"          Value="16,8"/>
+      <Setter Property="FontSize"         Value="13"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="TabItem">
+            <Border x:Name="Root" Background="Transparent"
+                    BorderBrush="Transparent" BorderThickness="0,0,0,2"
+                    Padding="16,8">
+              <ContentPresenter x:Name="Content"
+                                ContentSource="Header"
+                                TextBlock.Foreground="{StaticResource TextSec}"/>
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsSelected" Value="True">
+                <Setter TargetName="Root"    Property="BorderBrush"  Value="{StaticResource AccentBlue}"/>
+                <Setter TargetName="Content" Property="TextBlock.Foreground" Value="{StaticResource AccentBlue}"/>
+              </Trigger>
+              <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="Root"    Property="Background" Value="#1A58A6FF"/>
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+
+    <!-- ── Card ────────────────────────────────────────────────────── -->
+    <Style x:Key="Card" TargetType="Border">
+      <Setter Property="Background"       Value="{StaticResource BgCard}"/>
+      <Setter Property="BorderBrush"      Value="{StaticResource Border}"/>
+      <Setter Property="BorderThickness"  Value="1"/>
+      <Setter Property="CornerRadius"     Value="8"/>
+      <Setter Property="Padding"          Value="16"/>
+      <Setter Property="Margin"           Value="0,0,0,12"/>
+    </Style>
+
+    <!-- ── Label key ───────────────────────────────────────────────── -->
+    <Style x:Key="Key" TargetType="TextBlock">
+      <Setter Property="Foreground"  Value="{StaticResource TextSec}"/>
+      <Setter Property="FontSize"    Value="12"/>
+      <Setter Property="Margin"      Value="0,0,0,4"/>
+    </Style>
+
+    <!-- ── Label value ─────────────────────────────────────────────── -->
+    <Style x:Key="Val" TargetType="TextBlock">
+      <Setter Property="Foreground"  Value="{StaticResource TextPri}"/>
+      <Setter Property="FontSize"    Value="14"/>
+      <Setter Property="FontWeight"  Value="Medium"/>
+      <Setter Property="Margin"      Value="0,0,0,12"/>
+      <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+
+    <!-- ── Section header ──────────────────────────────────────────── -->
+    <Style x:Key="SectionHeader" TargetType="TextBlock">
+      <Setter Property="Foreground"  Value="{StaticResource AccentBlue}"/>
+      <Setter Property="FontSize"    Value="11"/>
+      <Setter Property="FontWeight"  Value="SemiBold"/>
+      <Setter Property="Margin"      Value="0,0,0,10"/>
+    </Style>
+
+    <!-- ── Refresh button ──────────────────────────────────────────── -->
+    <Style x:Key="RefreshBtn" TargetType="Button">
+      <Setter Property="Background"       Value="#FF21262D"/>
+      <Setter Property="Foreground"       Value="{StaticResource TextPri}"/>
+      <Setter Property="BorderBrush"      Value="{StaticResource Border}"/>
+      <Setter Property="BorderThickness"  Value="1"/>
+      <Setter Property="Padding"          Value="14,6"/>
+      <Setter Property="FontSize"         Value="12"/>
+      <Setter Property="Cursor"           Value="Hand"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Border Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    CornerRadius="6"
+                    Padding="{TemplateBinding Padding}">
+              <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#FF30363D"/>
+              </Trigger>
+              <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="#FF161B22"/>
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+
+    <!-- ── Progress bar ────────────────────────────────────────────── -->
+    <Style x:Key="RamBar" TargetType="ProgressBar">
+      <Setter Property="Height"           Value="6"/>
+      <Setter Property="Background"       Value="#FF30363D"/>
+      <Setter Property="Foreground"       Value="{StaticResource AccentGreen}"/>
+      <Setter Property="BorderThickness"  Value="0"/>
+      <Setter Property="Margin"           Value="0,4,0,12"/>
+    </Style>
+
+  </Window.Resources>
+
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+
+    <!-- ── Title bar ──────────────────────────────────────────────── -->
+    <Border Grid.Row="0" Background="{StaticResource BgCard}"
+            BorderBrush="{StaticResource Border}" BorderThickness="0,0,0,1"
+            Padding="16,12">
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+          <TextBlock Text="⚙" FontSize="18" Foreground="{StaticResource AccentBlue}" Margin="0,0,10,0"/>
+          <TextBlock Text="CPU Y" FontSize="18" FontWeight="Bold" Foreground="{StaticResource TextPri}"/>
+          <TextBlock Text=" Desktop" FontSize="18" Foreground="{StaticResource TextSec}" Margin="6,0,0,0"/>
+        </StackPanel>
+        <Button Grid.Column="1" x:Name="BtnRefresh"
+                Style="{StaticResource RefreshBtn}"
+                Content="↺  Refresh"
+                Click="BtnRefresh_Click"/>
+      </Grid>
+    </Border>
+
+    <!-- ── Tab control ────────────────────────────────────────────── -->
+    <TabControl Grid.Row="1"
+                Style="{StaticResource TabCtrlStyle}"
+                ItemContainerStyle="{StaticResource TabItemStyle}"
+                Padding="0">
+
+      <!-- ═══════════════  CPU TAB  ═══════════════════════════════ -->
+      <TabItem Header="CPU">
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                      Background="{StaticResource BgDeep}">
+          <StackPanel Margin="20">
+            <Border Style="{StaticResource Card}">
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="*"/>
+                  <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                  <TextBlock Style="{StaticResource SectionHeader}" Text="PROCESSOR"/>
+                  <TextBlock Style="{StaticResource Key}" Text="Model"/>
+                  <TextBlock Style="{StaticResource Val}" x:Name="TxtCpuName"/>
+                  <TextBlock Style="{StaticResource Key}" Text="Base Clock"/>
+                  <TextBlock Style="{StaticResource Val}" x:Name="TxtCpuSpeed"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Margin="20,0,0,0">
+                  <TextBlock Style="{StaticResource SectionHeader}" Text="CORES &amp; THREADS"/>
+                  <TextBlock Style="{StaticResource Key}" Text="Physical Cores"/>
+                  <TextBlock Style="{StaticResource Val}" x:Name="TxtCpuCores"/>
+                  <TextBlock Style="{StaticResource Key}" Text="Logical Processors"/>
+                  <TextBlock Style="{StaticResource Val}" x:Name="TxtCpuThreads"/>
+                </StackPanel>
+              </Grid>
+            </Border>
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+
+      <!-- ═══════════════  GPU TAB  ═══════════════════════════════ -->
+      <TabItem Header="GPU">
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                      Background="{StaticResource BgDeep}">
+          <StackPanel Margin="20">
+            <Border Style="{StaticResource Card}">
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="*"/>
+                  <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                  <TextBlock Style="{StaticResource SectionHeader}" Text="GRAPHICS"/>
+                  <TextBlock Style="{StaticResource Key}" Text="Adapter"/>
+                  <TextBlock Style="{StaticResource Val}" x:Name="TxtGpuName"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Margin="20,0,0,0">
+                  <TextBlock Style="{StaticResource SectionHeader}" Text="MEMORY"/>
+                  <TextBlock Style="{StaticResource Key}" Text="VRAM"/>
+                  <TextBlock Style="{StaticResource Val}" x:Name="TxtGpuVram"/>
+                </StackPanel>
+              </Grid>
+            </Border>
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+
+      <!-- ═══════════════  RAM TAB  ═══════════════════════════════ -->
+      <TabItem Header="RAM">
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                      Background="{StaticResource BgDeep}">
+          <StackPanel Margin="20">
+            <Border Style="{StaticResource Card}">
+              <StackPanel>
+                <TextBlock Style="{StaticResource SectionHeader}" Text="MEMORY USAGE"/>
+                <Grid Margin="0,0,0,4">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                  </Grid.ColumnDefinitions>
+                  <TextBlock Style="{StaticResource Key}" Text="Usage"/>
+                  <TextBlock Grid.Column="1" Style="{StaticResource Key}"
+                             x:Name="TxtRamPercent"/>
+                </Grid>
+                <ProgressBar Style="{StaticResource RamBar}"
+                             x:Name="PbRam" Minimum="0" Maximum="100"/>
+                <Grid>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                  </Grid.ColumnDefinitions>
+                  <StackPanel>
+                    <TextBlock Style="{StaticResource Key}" Text="Total"/>
+                    <TextBlock Style="{StaticResource Val}" x:Name="TxtRamTotal"/>
+                  </StackPanel>
+                  <StackPanel Grid.Column="1">
+                    <TextBlock Style="{StaticResource Key}" Text="Used"/>
+                    <TextBlock Style="{StaticResource Val}" x:Name="TxtRamUsed"
+                               Foreground="{StaticResource AccentGreen}"/>
+                  </StackPanel>
+                  <StackPanel Grid.Column="2">
+                    <TextBlock Style="{StaticResource Key}" Text="Free"/>
+                    <TextBlock Style="{StaticResource Val}" x:Name="TxtRamFree"/>
+                  </StackPanel>
+                </Grid>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+
+      <!-- ═══════════════  OS TAB  ════════════════════════════════ -->
+      <TabItem Header="OS">
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                      Background="{StaticResource BgDeep}">
+          <StackPanel Margin="20">
+            <Border Style="{StaticResource Card}">
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="*"/>
+                  <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                  <TextBlock Style="{StaticResource SectionHeader}" Text="OPERATING SYSTEM"/>
+                  <TextBlock Style="{StaticResource Key}" Text="Name"/>
+                  <TextBlock Style="{StaticResource Val}" x:Name="TxtOsName"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Margin="20,0,0,0">
+                  <TextBlock Style="{StaticResource SectionHeader}" Text="VERSION"/>
+                  <TextBlock Style="{StaticResource Key}" Text="Version"/>
+                  <TextBlock Style="{StaticResource Val}" x:Name="TxtOsVersion"/>
+                </StackPanel>
+              </Grid>
+            </Border>
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+
+    </TabControl>
+
+    <!-- ── Status bar ─────────────────────────────────────────────── -->
+    <Border Grid.Row="2" Background="{StaticResource BgCard}"
+            BorderBrush="{StaticResource Border}" BorderThickness="0,1,0,0"
+            Padding="16,6">
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock x:Name="TxtStatus" Foreground="{StaticResource TextSec}"
+                   FontSize="11" VerticalAlignment="Center"/>
+        <TextBlock Grid.Column="1" Text="CPU Y Desktop  ·  .NET Edition"
+                   Foreground="{StaticResource TextSec}" FontSize="11"
+                   VerticalAlignment="Center"/>
+      </Grid>
+    </Border>
+
+  </Grid>
+</Window>

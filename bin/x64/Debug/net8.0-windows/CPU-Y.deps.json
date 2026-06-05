@@ -1,0 +1,119 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "CPU-Y/1.0.0": {
+        "dependencies": {
+          "Hardware.Info": "110.0.0.1"
+        },
+        "runtime": {
+          "CPU-Y.dll": {}
+        }
+      },
+      "Hardware.Info/110.0.0.1": {
+        "dependencies": {
+          "Hardware.Info.Core": "110.0.0.1",
+          "System.Management": "8.0.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Hardware.Info.dll": {
+            "assemblyVersion": "110.0.0.1",
+            "fileVersion": "110.0.0.1"
+          }
+        }
+      },
+      "Hardware.Info.Core/110.0.0.1": {
+        "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "8.0.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Hardware.Info.Core.dll": {
+            "assemblyVersion": "110.0.0.1",
+            "fileVersion": "110.0.0.1"
+          }
+        }
+      },
+      "Microsoft.Extensions.DependencyInjection.Abstractions/8.0.0": {
+        "runtime": {
+          "lib/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.23.53103"
+          }
+        }
+      },
+      "Microsoft.Extensions.Logging.Abstractions/8.0.0": {
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.0"
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Extensions.Logging.Abstractions.dll": {
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.23.53103"
+          }
+        }
+      },
+      "System.Management/8.0.0": {
+        "runtime": {
+          "lib/net8.0/System.Management.dll": {
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.23.53103"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/net8.0/System.Management.dll": {
+            "rid": "win",
+            "assetType": "runtime",
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.23.53103"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "CPU-Y/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Hardware.Info/110.0.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-p9xhkTcs0qbyBN4fA7MSRJRhFcAfHY4gxasYIXe9mSe3RM9hhl+9x8QlqdmibBawGBN/6/GS8UbTyBsah+cUAA==",
+      "path": "hardware.info/110.0.0.1",
+      "hashPath": "hardware.info.110.0.0.1.nupkg.sha512"
+    },
+    "Hardware.Info.Core/110.0.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Cy3QAdDZY1ht/64F2+bqAsBWNC7ZURSy8UAm00oFlBUYeqsK3fHRobIpIcsK6+gUaX/abL88cOt+JCAdHIiWnA==",
+      "path": "hardware.info.core/110.0.0.1",
+      "hashPath": "hardware.info.core.110.0.0.1.nupkg.sha512"
+    },
+    "Microsoft.Extensions.DependencyInjection.Abstractions/8.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-cjWrLkJXK0rs4zofsK4bSdg+jhDLTaxrkXu4gS6Y7MAlCvRyNNgwY/lJi5RDlQOnSZweHqoyvgvbdvQsRIW+hg==",
+      "path": "microsoft.extensions.dependencyinjection.abstractions/8.0.0",
+      "hashPath": "microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512"
+    },
+    "Microsoft.Extensions.Logging.Abstractions/8.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-arDBqTgFCyS0EvRV7O3MZturChstm50OJ0y9bDJvAcmEPJm0FFpFyjU/JLYyStNGGey081DvnQYlncNX5SJJGA==",
+      "path": "microsoft.extensions.logging.abstractions/8.0.0",
+      "hashPath": "microsoft.extensions.logging.abstractions.8.0.0.nupkg.sha512"
+    },
+    "System.Management/8.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-jrK22i5LRzxZCfGb+tGmke2VH7oE0DvcDlJ1HAKYU8cPmD8XnpUT0bYn2Gy98GEhGjtfbR/sxKTVb+dE770pfA==",
+      "path": "system.management/8.0.0",
+      "hashPath": "system.management.8.0.0.nupkg.sha512"
+    }
+  }
+}
