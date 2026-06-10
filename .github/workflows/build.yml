@@ -1,0 +1,122 @@
+name: Build & Release
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - "**.cs"
+      - "**.csproj"
+      - "**.sln"
+      - "**.xaml"
+      - "global.json"
+    paths-ignore:
+      - "**.md"
+  pull_request:
+    branches: [main, master]
+    paths:
+      - "**.cs"
+      - "**.csproj"
+      - "**.sln"
+      - "**.xaml"
+      - "global.json"
+    paths-ignore:
+      - "**.md"
+  workflow_dispatch:
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  build:
+    name: Build (win-x64)
+    runs-on: [self-hosted, linux, debian]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.x"
+
+      - name: Restore dependencies
+        run: dotnet restore CPU-Y.sln
+
+      - name: Build
+        run: >
+          dotnet build CPU-Y.sln
+          --configuration Release
+          --no-restore
+          -r win-x64
+
+      - name: Publish (self-contained)
+        run: >
+          dotnet publish CPU-Y.csproj
+          --configuration Release
+          --no-restore
+          -r win-x64
+          --self-contained true
+          -p:PublishSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+          --output ./publish
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CPU-Y-win-x64
+          path: ./publish/
+          if-no-files-found: error
+
+  release:
+    name: Release
+    needs: build
+    # Only release on direct pushes to main/master, not PRs
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    runs-on: [self-hosted, linux, debian]
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: CPU-Y-win-x64
+          path: ./publish
+
+      - name: Compute next version
+        id: version
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Get all release tags matching 0.X, pick the highest number
+          LATEST=$(gh release list \
+            --repo "${{ github.repository }}" \
+            --limit 100 \
+            --json tagName \
+            --jq '[.[].tagName | select(test("^0\\.[0-9]+$"))] | sort_by(split(".")[1] | tonumber) | last' \
+            2>/dev/null || echo "")
+
+          if [ -z "$LATEST" ] || [ "$LATEST" = "null" ]; then
+            NEXT="0.1"
+          else
+            NUM=$(echo "$LATEST" | sed 's/^0\.//')
+            NEXT="0.$((NUM + 1))"
+          fi
+
+          echo "version=$NEXT" >> "$GITHUB_OUTPUT"
+          echo "Next release: $NEXT"
+
+      - name: Zip publish folder
+        run: zip -r "CPU-Y-${{ steps.version.outputs.version }}-win-x64.zip" ./publish
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          name: CPU-Y ${{ steps.version.outputs.version }}
+          files: CPU-Y-${{ steps.version.outputs.version }}-win-x64.zip
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
